@@ -1,15 +1,10 @@
-vagrant.configure("2") do |config|
-  config.vm.define "box1" do |box1|
-  
-      box1.vm.box="ubuntu/trusty64"
-      
-      box1.vm.network :forwarded_port, guest: 22, host: 10122, id: "ssh"
+Vagrant.configure("2") do |config|
+  config.vm.box = "trusty64"
+  config.vm.provision :shell, :path => "vm_provision/provision-ubuntu-14.04.sh"
+  config.vm.network "private_network", ip: "10.0.0.10"
+
+  config.vm.provider "virtualbox" do |vb|
+    vb.customize ["modifyvm", :id, "--cpuexecutioncap", "50", "--cpus", "1"]
+    vb.memory = 1024
   end
-  
-  config.vm.define "box2" do |box2|
-    
-    box2.vm.box="scotch/box"
-    
-    box2.vm.network :forwarded_port, guest: 22, host: 10222, id: "ssh"
- end
 end
